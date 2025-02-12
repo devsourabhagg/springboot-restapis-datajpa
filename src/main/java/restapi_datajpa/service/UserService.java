@@ -1,12 +1,13 @@
 package restapi_datajpa.service;
 
+import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    User createUser(User user);
+    UserDto createUser(UserDto user);
 
     User getUserById(Long userId);
 

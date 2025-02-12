@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
 import restapi_datajpa.service.UserService;
 
@@ -18,11 +19,11 @@ public class UserController {
 
     //build create user Rest Api
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody  User user){
+    public ResponseEntity<UserDto> createUser(@RequestBody  UserDto user){
 
-        User savedUser = userService.createUser(user);
+        UserDto savedUserDto = userService.createUser(user);
 
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedUserDto, HttpStatus.CREATED);
     }
 
     //build get user by id
