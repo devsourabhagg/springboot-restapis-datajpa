@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
+import restapi_datajpa.mapper.UserMapper;
 import restapi_datajpa.repository.UserRepository;
 import restapi_datajpa.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -20,46 +23,50 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
 
         //convert UserDto into User JPA Entity
-        User user = new User(
-                userDto.getId(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getEmail()
-        );
+        User user = UserMapper.mapToUser(userDto);
+
         User savedUser = userRepository.save(user);
 
-        //convert User JPA Entity to User Dto
-        UserDto savedUserDto = new UserDto(
-                savedUser.getId(),
-                savedUser.getFirstName(),
-                savedUser.getLastName(),
-                savedUser.getEmail()
-        );
+        //convert User JPA Entity to UserDto
+        UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
 
         return  savedUserDto;
 
     }
 
     @Override
-    public User getUserById(Long userId) {
+    public UserDto getUserById(Long userId) {
         Optional<User> optionalUser =  userRepository.findById(userId);
-        return optionalUser.get();
+        User user = optionalUser.get();
+        return UserMapper.mapToUserDto(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users;
+        //covert user jpa entity to user dto
+//        List<UserDto> userDtos = new ArrayList<>();
+//        for(User user : users){
+//            userDtos.add(UserMapper.mapToUserDto(user));
+//        }
+//
+//        return userDtos;
+
+        //using stream
+        return users.stream().map(UserMapper::mapToUserDto)
+                .collect(Collectors.toList());
+
+
     }
 
     @Override
-    public User updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId()).get();
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
+    public UserDto updateUser(UserDto userDto) {
+        User existingUser = userRepository.findById(userDto.getId()).get();
+        existingUser.setFirstName(userDto.getFirstName());
+        existingUser.setLastName(userDto.getLastName());
+        existingUser.setEmail(userDto.getEmail());
         User updatedUser = userRepository.save(existingUser);
-        return updatedUser;
+        return UserMapper.mapToUserDto(updatedUser);
     }
 
     @Override

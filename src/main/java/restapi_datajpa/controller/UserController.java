@@ -28,32 +28,32 @@ public class UserController {
 
     //build get user by id
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId){
 
-        User user = userService.getUserById(userId);
+        UserDto userDto = userService.getUserById(userId);
 
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return new ResponseEntity<>(userDto,HttpStatus.OK);
 
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<UserDto>> getAllUsers(){
 
-        List<User> users = userService.getAllUsers();
+        List<UserDto> usersDto = userService.getAllUsers();
 
-        return new ResponseEntity<>(users,HttpStatus.OK);
+        return new ResponseEntity<>(usersDto,HttpStatus.OK);
 
     }
 
     // build update user rest api
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@RequestBody User user,@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,@PathVariable("id") Long userId){
 
-        user.setId(userId);
+        userDto.setId(userId);
 
-        User updatedUser = userService.updateUser(user);
+        UserDto updatedUserDto = userService.updateUser(userDto);
 
-        return new ResponseEntity<>(updatedUser,HttpStatus.OK);
+        return new ResponseEntity<>(updatedUserDto,HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
