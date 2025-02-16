@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
+import restapi_datajpa.exception.EmailAlreadyExistsException;
 import restapi_datajpa.exception.ResourceNotFoundException;
 import restapi_datajpa.repository.UserRepository;
 import restapi_datajpa.service.UserService;
@@ -26,6 +27,13 @@ public class UserServiceImpl implements UserService {
 
         //convert UserDto into User JPA Entity
 //        User user = UserMapper.mapToUser(userDto);
+
+        Optional<User> optionalUser = userRepository.findByEmail(userDto.getEmail());
+
+        if (optionalUser.isPresent()){
+
+            throw new EmailAlreadyExistsException("Email Already Exits for User");
+        }
 
         User user = modelMapper.map(userDto,User.class);
 

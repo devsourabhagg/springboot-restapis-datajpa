@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
+import restapi_datajpa.exception.EmailAlreadyExistsException;
 import restapi_datajpa.exception.ErrorDetails;
 import restapi_datajpa.exception.ResourceNotFoundException;
 import restapi_datajpa.service.UserService;
@@ -23,7 +24,7 @@ public class UserController {
 
     //build create user Rest Api
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody  UserDto user){
+    public ResponseEntity<UserDto> createUser(@RequestBody  UserDto user) {
 
         UserDto savedUserDto = userService.createUser(user);
 
@@ -68,18 +69,19 @@ public class UserController {
         return  new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException (ResourceNotFoundException exception,
-                                         WebRequest webRequest){
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<ErrorDetails> handleResourceNotFoundException (ResourceNotFoundException exception,
+//                                         WebRequest webRequest){
+//
+//        ErrorDetails errorDetails = new ErrorDetails(
+//                LocalDateTime.now(),
+//                exception.getMessage(),
+//                webRequest.getDescription(false),
+//                "USER_NOT_FOUND"
+//        );
+//
+//        return new ResponseEntity<>(errorDetails,HttpStatus.NOT_FOUND);
+//
+//    }
 
-        ErrorDetails errorDetails = new ErrorDetails(
-                LocalDateTime.now(),
-                exception.getMessage(),
-                webRequest.getDescription(false),
-                "USER_NOT_FOUND"
-        );
-
-        return new ResponseEntity<>(errorDetails,HttpStatus.NOT_FOUND);
-
-    }
 }
