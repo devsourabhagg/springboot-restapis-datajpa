@@ -4,10 +4,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
+import restapi_datajpa.exception.ErrorDetails;
+import restapi_datajpa.exception.ResourceNotFoundException;
 import restapi_datajpa.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -62,5 +66,20 @@ public class UserController {
         userService.deleteUser(userId);
 
         return  new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException (ResourceNotFoundException exception,
+                                         WebRequest webRequest){
+
+        ErrorDetails errorDetails = new ErrorDetails(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                webRequest.getDescription(false),
+                "USER_NOT_FOUND"
+        );
+
+        return new ResponseEntity<>(errorDetails,HttpStatus.NOT_FOUND);
+
     }
 }
