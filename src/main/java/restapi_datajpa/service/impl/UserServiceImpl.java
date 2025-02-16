@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import restapi_datajpa.dto.UserDto;
 import restapi_datajpa.entity.User;
+import restapi_datajpa.exception.ResourceNotFoundException;
 import restapi_datajpa.repository.UserRepository;
 import restapi_datajpa.service.UserService;
 
@@ -43,8 +44,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long userId) {
-        Optional<User> optionalUser =  userRepository.findById(userId);
-        User user = optionalUser.get();
+//        Optional<User> optionalUser =  userRepository.findById(userId);
+//        User user = optionalUser.get();
+        User user = userRepository.findById(userId).orElseThrow(
+
+                () -> new ResourceNotFoundException("User","id",userId)
+
+        );
+
         //return UserMapper.mapToUserDto(user);
         return modelMapper.map(user,UserDto.class);
     }
@@ -72,7 +79,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        User existingUser = userRepository.findById(userDto.getId()).get();
+        //User existingUser = userRepository.findById(userDto.getId()).get();
+
+        User existingUser = userRepository.findById(userDto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("User","id",userDto.getId())
+        );
+
         existingUser.setFirstName(userDto.getFirstName());
         existingUser.setLastName(userDto.getLastName());
         existingUser.setEmail(userDto.getEmail());
@@ -83,6 +95,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
+        userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User","id",userId)
+        );
         userRepository.deleteById(userId);
     }
 }
