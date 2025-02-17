@@ -1,5 +1,6 @@
 package restapi_datajpa.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UserController {
 
     //build create user Rest Api
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody  UserDto user) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody  UserDto user) {
 
         UserDto savedUserDto = userService.createUser(user);
 
@@ -52,7 +53,7 @@ public class UserController {
 
     // build update user rest api
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto,@PathVariable("id") Long userId){
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto,@PathVariable("id") Long userId){
 
         userDto.setId(userId);
 
