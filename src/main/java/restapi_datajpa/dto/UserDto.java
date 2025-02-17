@@ -1,5 +1,6 @@
 package restapi_datajpa.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Schema(
+        description = "UserDto Model Information"
+)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,10 +19,16 @@ public class UserDto {
     private Long id;
 
 
+    @Schema(
+            description = "User First Name"
+    )
     //user first name should not be null or empty
     @NotEmpty(message = "User first name should not be null or empty")
     private String firstName;
 
+    @Schema(
+            description = "User Last Name"
+    )
     //user last name should not be null or empty
     @NotEmpty(message = "User last name should not be null or empty")
     private String lastName;
